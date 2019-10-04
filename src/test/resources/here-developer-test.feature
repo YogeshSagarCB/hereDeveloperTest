@@ -1,7 +1,6 @@
-Feature: Title of your feature
-  I want to use this template for my feature file
+Feature: Here developer documentation test
 
-  Scenario: Title of your scenario outline
+  Scenario: Checking here developer documentation page for broken links and verifying angular is loaded in all the pages.
     Given I am on here developer documnetation page
     When I get all the links on the page
     Then I verify all links for 200 status code
