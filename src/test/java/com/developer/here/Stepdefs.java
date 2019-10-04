@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -93,19 +93,19 @@ public class Stepdefs {
 		ChromeDriver chromeDriver = new ChromeDriver(chromeOptions);
 		extentUtility.startTest("Checking if angular is initialized");
 		chromeDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		int i = 1;
+		JavascriptExecutor js = chromeDriver;
 		for (String link : linkUrls) {
 			try {
 				chromeDriver.get(link);
-				WebElement angularScript = chromeDriver.findElement(By.xpath("//script[contains(@src,'angular')]"));
-				System.out.println(i++ + " : " + angularScript.getAttribute("src"));
-				extentUtility.addStep(LogStatus.PASS, "Found angular script in page " + link);
-			} catch (NoSuchElementException e) {
-				extentUtility.addStep(LogStatus.FAIL, "Could not find angular script in page " + link);
-				e.printStackTrace();
+				Object message = js.executeScript("return angular.bootstrap");
+				extentUtility.addStep(LogStatus.PASS, "Angular loaded on page : " + link);
 			} catch (Exception e) {
-				extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",
-						e.getMessage());
+				if (e.getMessage().contains("angular is not defined")) {
+					extentUtility.addStep(LogStatus.FAIL, "Could not find angular on page : " + link);
+				} else {
+					extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",
+							e.getMessage());
+				}
 				e.printStackTrace();
 			}
 		}
