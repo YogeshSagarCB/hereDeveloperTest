@@ -52,7 +52,7 @@ public class Stepdefs {
 		linkUrls = new HashSet<String>();
 		for (WebElement link : links) {
 			String linkUrl = link.getAttribute("href");
-			if (linkUrl.contains("developer.here.com")) {
+			if (linkUrl.contains("developer.here.com/documentation")) {
 				linkUrls.add(linkUrl);
 			}
 		}
