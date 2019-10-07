@@ -52,7 +52,7 @@ public class Stepdefs {
 		linkUrls = new HashSet<String>();
 		for (WebElement link : links) {
 			String linkUrl = link.getAttribute("href");
-			if (linkUrl.contains("developer.here.com/documentation")) {
+			if (linkUrl.contains("https://developer.here.com/documentation")) {
 				linkUrls.add(linkUrl);
 			}
 		}
@@ -78,8 +78,7 @@ public class Stepdefs {
 					extentUtility.addStep(LogStatus.FAIL, "Status code is not 200 for " + link);
 				}
 			} catch (Exception e) {
-				extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",
-						e.getMessage());
+				extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -97,16 +96,15 @@ public class Stepdefs {
 		for (String link : linkUrls) {
 			try {
 				chromeDriver.get(link);
-				Object message = js.executeScript("return angular.bootstrap");
-				extentUtility.addStep(LogStatus.PASS, "Angular loaded on page : " + link);
+				js.executeScript("return angular");
 			} catch (Exception e) {
 				if (e.getMessage().contains("angular is not defined")) {
 					extentUtility.addStep(LogStatus.FAIL, "Could not find angular on page : " + link);
+				} else if (e.getMessage().contains("Object reference chain is too long")) {
+					extentUtility.addStep(LogStatus.PASS, "Angular loaded on page : " + link);
 				} else {
-					extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",
-							e.getMessage());
+					extentUtility.addStepWithScreenshot(LogStatus.FAIL, "Exception occured while checking status code",e.getMessage());
 				}
-				e.printStackTrace();
 			}
 		}
 		chromeDriver.close();
